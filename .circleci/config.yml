@@ -37,9 +37,11 @@ commands:
               exit 0
             fi
 
+            echo " ▶️  Searching for the base commit of ${CIRCLE_BRANCH} and ${ROOT_BRANCH} ..."
+
             BASE_COMMIT=$(git merge-base $CIRCLE_BRANCH $ROOT_BRANCH)
             while [ -z $BASE_COMMIT ]; do
-              git fetch -q --deepen=1 origin $CIRCLE_BRANCH $ROOT_BRANCH
+              git fetch --deepen=2 origin $CIRCLE_BRANCH $ROOT_BRANCH
               BASE_COMMIT=$(git merge-base $CIRCLE_BRANCH $ROOT_BRANCH)
             done
 
@@ -98,9 +100,11 @@ commands:
               exit 0
             fi
 
+            echo " ▶️  Searching for the base commit of ${CIRCLE_BRANCH} and ${ROOT_BRANCH} ..."
+
             BASE_COMMIT=$(git merge-base $CIRCLE_BRANCH $ROOT_BRANCH)
             while [ -z $BASE_COMMIT ]; do
-              git fetch -q --deepen=1 origin $CIRCLE_BRANCH $ROOT_BRANCH
+              git fetch --deepen=2 origin $CIRCLE_BRANCH $ROOT_BRANCH
               BASE_COMMIT=$(git merge-base $CIRCLE_BRANCH $ROOT_BRANCH)
             done
 
@@ -188,8 +192,7 @@ commands:
                 git checkout -q "$CIRCLE_TAG"
             elif [ -n "$CIRCLE_BRANCH" ]
             then
-                git reset --hard "$CIRCLE_SHA1"
-                git checkout -q -B "$CIRCLE_BRANCH"
+                git checkout -b "$CIRCLE_BRANCH" "$CIRCLE_SHA1"
             fi
 
             git reset --hard "$CIRCLE_SHA1"
@@ -342,7 +345,7 @@ executors:
       - image: lnl7/nix:2.1.2
     # Symlink to the readline-enabled bash which is the default command of the container
     shell: /run/current-system/sw/bin/bash -leo pipefail
-    working_directory: ~/expo
+    working_directory: /root/expo
     environment:
       # fastlane complains if these are not set
       LANG: en_US.UTF-8
@@ -359,7 +362,7 @@ executors:
     docker:
       - image: circleci/node:latest-browsers
     shell: /bin/bash -leo pipefail
-    working_directory: ~/expo
+    working_directory: /home/circleci/expo
     resource_class: small
     environment:
       USER: circleci
