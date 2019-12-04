@@ -5,6 +5,7 @@ require_relative '../react-native-lab/react-native/scripts/autolink-ios.rb'
 install! 'cocoapods',
          :generate_multiple_pod_projects => true,
          :incremental_installation => true
+
 platform :ios, '10.0'
 inhibit_all_warnings!
 
